@@ -18,56 +18,36 @@ export default function SignUp({ login }) {
 
   async function submitHandler(e) {
     e.preventDefault();
-    if (isSignup) {
-      if (password.current.value !== confirmedPassword.current.value) {
-        return;
-      }
-      const res = await fetch(signupEndpoint, {
-        method: "POST",
-        body: JSON.stringify({
-          email: email.current.value,
-          password: password.current.value,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        console.log("User has successfully signed up");
-      } else {
-        const data = await res.json();
-        let errorMessage = "Authentication Failed";
-        if (data.error.message) {
-          errorMessage = data.error.message;
-        }
-        alert(errorMessage);
-      }
+    if (
+      isSignup &&
+      password.current.value !== confirmedPassword.current.value
+    ) {
+      return;
+    }
+    const endpoint = isSignup ? signupEndpoint : loginEndpoint;
+    const res = await fetch(endpoint, {
+      method: "POST",
+      body: JSON.stringify({
+        email: email.current.value,
+        password: password.current.value,
+        returnSecureToken: true,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (res.ok) {
+      const data = await res.json();
+      console.log("User has successfully signed up/logged in");
+      localStorage.setItem("token", data.idToken);
+      login();
     } else {
-      const res = await fetch(loginEndpoint, {
-        method: "POST",
-        body: JSON.stringify({
-          email: email.current.value,
-          password: password.current.value,
-          returnSecureToken: true,
-        }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res.ok) {
-        const data = await res.json();
-        localStorage.setItem("token", data.idToken);
-        login();
-      } else {
-        const data = await res.json();
-        let errorMessage = "Authentication Failed";
-        if (data.error.message) {
-          errorMessage = data.error.message;
-        }
-        alert(errorMessage);
+      const data = await res.json();
+      let errorMessage = "Authentication Failed";
+      if (data.error.message) {
+        errorMessage = data.error.message;
       }
+      alert(errorMessage);
     }
   }
 
