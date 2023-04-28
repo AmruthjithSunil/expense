@@ -1,5 +1,5 @@
 import { useState } from "react";
-import SignUp from "./components/SignUp";
+import Auth from "./components/Auth";
 import Home from "./components/Home";
 
 export default function App() {
@@ -9,5 +9,5 @@ export default function App() {
     setIsAuth(true);
   }
 
-  return <>{isAuth ? <Home /> : <SignUp login={login} />}</>;
+  return <>{isAuth ? <Home /> : <Auth login={login} />}</>;
 }

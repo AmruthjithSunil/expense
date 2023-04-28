@@ -1,8 +1,7 @@
 import { useRef, useState } from "react";
-import "./CSS/SignUp.css";
 import env from "../env";
 
-export default function SignUp({ login }) {
+export default function Auth({ login }) {
   const [isSignup, setIsSignup] = useState(true);
 
   function toggleSignup() {
