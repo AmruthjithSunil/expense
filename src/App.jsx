@@ -23,10 +23,4 @@ export default function App() {
       <RouterProvider router={router} />
     </UserProvider>
   );
-
-  // const [isAuth, setIsAuth] = useState(false);
-  // function login() {
-  //   setIsAuth(true);
-  // }
-  // return <>{isAuth ? <Home /> : <Auth login={login} />}</>;
 }
