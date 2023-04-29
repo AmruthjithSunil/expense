@@ -1,7 +1,10 @@
-import { useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import env from "../env";
+import UserContext from "../store/user-context";
 
 export default function Auth({ login }) {
+  const userCtx = useContext(UserContext);
+
   const [isSignup, setIsSignup] = useState(true);
 
   function toggleSignup() {
@@ -38,8 +41,9 @@ export default function Auth({ login }) {
     if (res.ok) {
       const data = await res.json();
       console.log("User has successfully signed up/logged in");
-      localStorage.setItem("token", data.idToken);
-      login();
+      localStorage.setItem("refreshToken", data.refreshToken);
+      userCtx.updateIdToken(data.idToken);
+      userCtx.updateIsLoggedin(true);
     } else {
       const data = await res.json();
       let errorMessage = "Authentication Failed";
