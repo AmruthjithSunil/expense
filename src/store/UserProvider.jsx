@@ -13,6 +13,7 @@ export default function UserProvider({ children }) {
 
   const [idToken, setIdToken] = useState("null");
   const [user, setUser] = useState({});
+  const [expenses, setExpenses] = useState([]);
 
   async function getUserData() {
     const getIdTokenEndpoint = `https://securetoken.googleapis.com/v1/token?key=${env.apiKey}`;
@@ -56,11 +57,15 @@ export default function UserProvider({ children }) {
     idToken,
     user,
     isLoggedin,
+    expenses,
     updateIdToken: (token) => {
       setIdToken(token);
     },
     updateIsLoggedin: (status) => {
       setIsLoggedin(status);
+    },
+    addExpense: (expense) => {
+      setExpenses((expenses) => [expense, ...expenses]);
     },
   };
 

@@ -1,7 +1,9 @@
-import { useContext } from "react";
+import { useContext, useRef } from "react";
 import { Link, Navigate } from "react-router-dom";
 import UserContext from "../store/user-context";
 import env from "../env";
+import ExpenseForm from "../components/ExpenseForm";
+import ExpenseList from "../components/ExpenseList";
 
 export default function Home() {
   const userCtx = useContext(UserContext);
@@ -43,6 +45,8 @@ export default function Home() {
           <button onClick={verificationHandler}>Verify Now</button>
         </p>
       )}
+      <ExpenseForm />
+      <ExpenseList />
     </>
   );
 }
