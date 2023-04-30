@@ -1,7 +1,7 @@
 import { useContext, useRef } from "react";
 import UserContext from "../store/user-context";
 
-export default function ExpenseForm() {
+export default function ExpenseForm({ id, updateId }) {
   const userCtx = useContext(UserContext);
 
   const amount = useRef();
@@ -14,7 +14,9 @@ export default function ExpenseForm() {
     const shortEmail = userCtx.user.email
       .replaceAll("@", "")
       .replaceAll(".", "");
-    const expensesEndpoint = `https://haha-1b803.firebaseio.com/${shortEmail}.json`;
+    const expensesEndpoint = `https://haha-1b803.firebaseio.com/${shortEmail}${
+      id ? "/" + id : ""
+    }.json`;
 
     const expense = {
       amount: amount.current.value,
@@ -22,24 +24,42 @@ export default function ExpenseForm() {
       category: category.current.value,
     };
 
-    const res = await fetch(expensesEndpoint, {
-      method: "POST",
-      body: JSON.stringify(expense),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const res = id
+      ? await fetch(expensesEndpoint, {
+          method: "PUT",
+          body: JSON.stringify(expense),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        })
+      : await fetch(expensesEndpoint, {
+          method: "POST",
+          body: JSON.stringify(expense),
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
     const data = await res.json();
 
     if (res.ok) {
-      console.log(data);
-      userCtx.addExpense(expense);
+      if (id) {
+        userCtx.removeExpense(id);
+        updateId(null);
+      }
+      userCtx.addExpense({ id: data.name, ...expense });
       amount.current.value = "";
       description.current.value = "";
       category.current.value = "food";
     } else {
       alert(data.error.message);
     }
+  }
+
+  if (id) {
+    const expense = userCtx.expenses.find((expense) => expense.id === id);
+    amount.current.value = expense.amount;
+    description.current.value = expense.description;
+    category.current.value = expense.category;
   }
 
   return (

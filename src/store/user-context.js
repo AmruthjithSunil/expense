@@ -8,6 +8,7 @@ const UserContext = React.createContext({
   updateIdToken: (token) => {},
   updateIsLoggedin: (status) => {},
   addExpense: (expense) => {},
+  removeExpense: (id) => {},
 });
 
 export default UserContext;

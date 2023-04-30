@@ -1,4 +1,4 @@
-import { useContext, useRef } from "react";
+import { useContext, useRef, useState } from "react";
 import { Link, Navigate } from "react-router-dom";
 import UserContext from "../store/user-context";
 import env from "../env";
@@ -7,6 +7,12 @@ import ExpenseList from "../components/ExpenseList";
 
 export default function Home() {
   const userCtx = useContext(UserContext);
+
+  const [id, setId] = useState(null);
+
+  function updateId(id) {
+    setId(id);
+  }
 
   async function verificationHandler() {
     const emailVerificationEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${env.apiKey}`;
@@ -45,8 +51,8 @@ export default function Home() {
           <button onClick={verificationHandler}>Verify Now</button>
         </p>
       )}
-      <ExpenseForm />
-      <ExpenseList />
+      <ExpenseForm id={id} updateId={updateId} />
+      <ExpenseList updateId={updateId} />
     </>
   );
 }

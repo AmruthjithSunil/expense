@@ -61,8 +61,11 @@ export default function UserProvider({ children }) {
     });
     const expenses = await res1.json();
     if (res1.ok) {
-      console.log(expenses);
-      setExpenses(Object.values(expenses));
+      setExpenses(
+        Object.keys(expenses).map((key) => {
+          return { id: key, ...expenses[key] };
+        })
+      );
     } else {
       alert(expenses.error.message);
     }
@@ -85,6 +88,11 @@ export default function UserProvider({ children }) {
     },
     addExpense: (expense) => {
       setExpenses((expenses) => [expense, ...expenses]);
+    },
+    removeExpense: (id) => {
+      setExpenses((expenses) =>
+        expenses.filter((expense) => expense.id !== id)
+      );
     },
   };
 
