@@ -19,11 +19,9 @@ export default function NavBar() {
       <div style={{ marginLeft: "16px" }}>
         <NavLink to="/update-profile">Update Profile</NavLink>
       </div>
-      {userCtx.isLoggedin && (
-        <div onClick={logoutHandler} style={{ marginLeft: "16px" }}>
-          <NavLink to="/auth">Logout</NavLink>
-        </div>
-      )}
+      <div onClick={logoutHandler} style={{ marginLeft: "16px" }}>
+        <NavLink to="/auth">Logout</NavLink>
+      </div>
     </div>
   );
 }

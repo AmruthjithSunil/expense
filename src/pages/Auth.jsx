@@ -1,9 +1,11 @@
 import { useContext, useRef, useState } from "react";
 import env from "../env";
 import UserContext from "../store/user-context";
+import { Link, useNavigate } from "react-router-dom";
 
-export default function Auth({ login }) {
+export default function Auth() {
   const userCtx = useContext(UserContext);
+  const navigate = useNavigate();
 
   const [isSignup, setIsSignup] = useState(true);
 
@@ -44,12 +46,12 @@ export default function Auth({ login }) {
       localStorage.setItem("refreshToken", data.refreshToken);
       userCtx.updateIdToken(data.idToken);
       userCtx.updateIsLoggedin(true);
+      navigate("/");
     } else {
       const data = await res.json();
-      let errorMessage = "Authentication Failed";
-      if (data.error.message) {
-        errorMessage = data.error.message;
-      }
+      const errorMessage = data.error.message
+        ? data.error.message
+        : "Authentication Failed";
       alert(errorMessage);
     }
   }
@@ -69,6 +71,8 @@ export default function Auth({ login }) {
         )}
         <input type="submit" value={isSignup ? "Sign Up" : "Login"} />
       </form>
+      <Link to="/forgot-password">Forgot Password?</Link>
+      <br />
       <button onClick={toggleSignup}>
         Or {isSignup ? "Login" : "Sign Up"}
       </button>
