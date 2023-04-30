@@ -7,7 +7,7 @@ export default function ExpenseList() {
   return (
     <>
       {userCtx.expenses.map((expense) => (
-        <div key={expense.id}>
+        <div key={expense.description}>
           {expense.amount}-{expense.description}-{expense.category}
         </div>
       ))}

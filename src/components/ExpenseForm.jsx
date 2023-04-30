@@ -8,19 +8,38 @@ export default function ExpenseForm() {
   const description = useRef();
   const category = useRef();
 
-  function submitHandler(e) {
+  async function submitHandler(e) {
     e.preventDefault();
+
+    const shortEmail = userCtx.user.email
+      .replaceAll("@", "")
+      .replaceAll(".", "");
+    const expensesEndpoint = `https://haha-1b803.firebaseio.com/${shortEmail}.json`;
+
     const expense = {
-      id: amount.current.value,
       amount: amount.current.value,
       description: description.current.value,
       category: category.current.value,
     };
-    userCtx.addExpense(expense);
 
-    amount.current.value = "";
-    description.current.value = "";
-    category.current.value = "food";
+    const res = await fetch(expensesEndpoint, {
+      method: "POST",
+      body: JSON.stringify(expense),
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const data = await res.json();
+
+    if (res.ok) {
+      console.log(data);
+      userCtx.addExpense(expense);
+      amount.current.value = "";
+      description.current.value = "";
+      category.current.value = "food";
+    } else {
+      alert(data.error.message);
+    }
   }
 
   return (

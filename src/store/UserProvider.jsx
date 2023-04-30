@@ -46,6 +46,25 @@ export default function UserProvider({ children }) {
       setUser(data.users[0]);
     } else {
       alert(data.error.message);
+      return;
+    }
+
+    const shortEmail = data.users[0].email
+      .replaceAll("@", "")
+      .replaceAll(".", "");
+    const getExpensesEndpoint = `https://haha-1b803.firebaseio.com/${shortEmail}.json`;
+    const res1 = await fetch(getExpensesEndpoint, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const expenses = await res1.json();
+    if (res1.ok) {
+      console.log(expenses);
+      setExpenses(Object.values(expenses));
+    } else {
+      alert(expenses.error.message);
     }
   }
 
