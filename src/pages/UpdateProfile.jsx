@@ -1,9 +1,10 @@
-import { useContext, useRef } from "react";
+import { useRef } from "react";
 import env from "../env";
-import UserContext from "../store/user-context";
+import { useSelector } from "react-redux";
 
 export default function UpdateProfile() {
-  const userCtx = useContext(UserContext);
+  const user = useSelector((state) => state.auth.user);
+  const idToken = useSelector((state) => state.auth.idToken);
 
   const profileEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:update?key=${env.apiKey}`;
 
@@ -20,7 +21,7 @@ export default function UpdateProfile() {
     const res = await fetch(profileEndpoint, {
       method: "POST",
       body: JSON.stringify({
-        idToken: userCtx.idToken,
+        idToken,
         displayName: fullName.current.value,
         photoUrl: photoUrl.current.value,
         returnSecureToken: true,
@@ -45,17 +46,9 @@ export default function UpdateProfile() {
     <>
       <form onSubmit={submitHandler}>
         <label htmlFor="fullName">Full Name</label>
-        <input
-          type="text"
-          ref={fullName}
-          defaultValue={userCtx.user.displayName}
-        />
+        <input type="text" ref={fullName} defaultValue={user.displayName} />
         <label htmlFor="profilePhoto">Profile Photo URL</label>
-        <input
-          type="text"
-          ref={photoUrl}
-          defaultValue={userCtx.user.photoUrl}
-        />
+        <input type="text" ref={photoUrl} defaultValue={user.photoUrl} />
         <input type="submit" value="Update" />
       </form>
     </>

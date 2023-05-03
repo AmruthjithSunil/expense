@@ -1,17 +1,17 @@
-import { useContext } from "react";
-import UserContext from "../store/user-context";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseActions } from "../store";
 
 export default function ExpenseList({ updateId }) {
-  const userCtx = useContext(UserContext);
+  const expenses = useSelector((state) => state.expense.expenses);
+  const user = useSelector((state) => state.auth.user);
+  const dispatch = useDispatch();
 
   async function editHandler(e) {
     updateId(e.target.id);
   }
 
   async function deleteHandler(e) {
-    const shortEmail = userCtx.user.email
-      .replaceAll("@", "")
-      .replaceAll(".", "");
+    const shortEmail = user.email.replaceAll("@", "").replaceAll(".", "");
     const expenseEndpoint = `https://haha-1b803.firebaseio.com/${shortEmail}/${e.target.id}.json`;
 
     const res = await fetch(expenseEndpoint, {
@@ -22,7 +22,7 @@ export default function ExpenseList({ updateId }) {
     });
     const data = await res.json();
     if (res.ok) {
-      userCtx.removeExpense(e.target.id);
+      dispatch(expenseActions.removeExpenses(e.target.id));
       console.log("Expense successfuly deleted");
     } else {
       alert(data.error.message);
@@ -31,7 +31,7 @@ export default function ExpenseList({ updateId }) {
 
   return (
     <>
-      {userCtx.expenses.map((expense) => (
+      {expenses.map((expense) => (
         <div key={expense.id}>
           {expense.amount}-{expense.description}-{expense.category}
           <button id={expense.id} onClick={editHandler}>

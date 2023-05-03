@@ -1,14 +1,14 @@
-import { useContext } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import UserContext from "../store/user-context";
+import { authActions } from "../store";
 
 export default function NavBar() {
-  const userCtx = useContext(UserContext);
+  const dispatch = useDispatch();
 
   function logoutHandler() {
     localStorage.setItem("refreshToken", "null");
-    userCtx.updateIdToken("null");
-    userCtx.updateIsLoggedin(false);
+    dispatch(authActions.updateIdToken("null"));
+    dispatch(authActions.updateIsLoggedin(false));
   }
 
   return (

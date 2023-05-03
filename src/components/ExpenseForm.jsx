@@ -1,8 +1,11 @@
-import { useContext, useRef } from "react";
-import UserContext from "../store/user-context";
+import { useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { expenseActions } from "../store";
 
 export default function ExpenseForm({ id, updateId }) {
-  const userCtx = useContext(UserContext);
+  const user = useSelector((state) => state.auth.user);
+  const expenses = useSelector((state) => state.expense.expenses);
+  const dispatch = useDispatch();
 
   const amount = useRef();
   const description = useRef();
@@ -11,9 +14,7 @@ export default function ExpenseForm({ id, updateId }) {
   async function submitHandler(e) {
     e.preventDefault();
 
-    const shortEmail = userCtx.user.email
-      .replaceAll("@", "")
-      .replaceAll(".", "");
+    const shortEmail = user.email.replaceAll("@", "").replaceAll(".", "");
     const expensesEndpoint = `https://haha-1b803.firebaseio.com/${shortEmail}${
       id ? "/" + id : ""
     }.json`;
@@ -43,10 +44,10 @@ export default function ExpenseForm({ id, updateId }) {
 
     if (res.ok) {
       if (id) {
-        userCtx.removeExpense(id);
+        dispatch(expenseActions.removeExpenses(id));
         updateId(null);
       }
-      userCtx.addExpense({ id: data.name, ...expense });
+      dispatch(expenseActions.addExpense({ id: data.name, ...expense }));
       amount.current.value = "";
       description.current.value = "";
       category.current.value = "food";
@@ -56,7 +57,7 @@ export default function ExpenseForm({ id, updateId }) {
   }
 
   if (id) {
-    const expense = userCtx.expenses.find((expense) => expense.id === id);
+    const expense = expenses.find((expense) => expense.id === id);
     amount.current.value = expense.amount;
     description.current.value = expense.description;
     category.current.value = expense.category;

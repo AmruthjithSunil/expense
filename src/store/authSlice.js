@@ -13,6 +13,7 @@ const authSlice = createSlice({
   },
   reducers: {
     updateIdToken(state, action) {
+      console.log("a");
       state.idToken = action.payload;
     },
     updateIsLoggedin(state, action) {

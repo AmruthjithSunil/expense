@@ -12,6 +12,9 @@ const expenseSlice = createSlice({
         (expense) => expense.id !== action.payload
       );
     },
+    updateExpenses(state, action) {
+      state.expenses = action.payload;
+    },
   },
 });
 
