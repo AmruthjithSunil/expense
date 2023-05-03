@@ -1,10 +1,12 @@
-import { useContext, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import env from "../env";
-import UserContext from "../store/user-context";
 import { Link, useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { authActions } from "../store";
 
 export default function Auth() {
-  const userCtx = useContext(UserContext);
+  const dispatch = useDispatch();
+
   const navigate = useNavigate();
 
   const [isSignup, setIsSignup] = useState(true);
@@ -44,8 +46,8 @@ export default function Auth() {
       const data = await res.json();
       console.log("User has successfully signed up/logged in");
       localStorage.setItem("refreshToken", data.refreshToken);
-      userCtx.updateIdToken(data.idToken);
-      userCtx.updateIsLoggedin(true);
+      dispatch(authActions.updateIdToken(data.idToken));
+      dispatch(authActions.updateIsLoggedin(true));
       navigate("/");
     } else {
       const data = await res.json();

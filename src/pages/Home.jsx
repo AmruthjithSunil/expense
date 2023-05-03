@@ -1,12 +1,18 @@
-import { useContext, useRef, useState } from "react";
+import { useState } from "react";
 import { Link, Navigate } from "react-router-dom";
-import UserContext from "../store/user-context";
-import env from "../env";
 import ExpenseForm from "../components/ExpenseForm";
 import ExpenseList from "../components/ExpenseList";
+import { useSelector } from "react-redux";
+import { verificationHandler } from "../utils/home";
 
 export default function Home() {
-  const userCtx = useContext(UserContext);
+  const isLoggedin = useSelector((state) => state.auth.isLoggedin);
+  const idToken = useSelector((state) => state.auth.idToken);
+  const user = useSelector((state) => state.auth.user);
+
+  if (isLoggedin && user === null) {
+    console.log("getUser");
+  }
 
   const [id, setId] = useState(null);
 
@@ -14,38 +20,17 @@ export default function Home() {
     setId(id);
   }
 
-  async function verificationHandler() {
-    const emailVerificationEndpoint = `https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=${env.apiKey}`;
-    const res = await fetch(emailVerificationEndpoint, {
-      method: "POST",
-      body: JSON.stringify({
-        requestType: "VERIFY_EMAIL",
-        idToken: userCtx.idToken,
-      }),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    const data = await res.json();
-    if (res.ok) {
-      console.log("success");
-      console.log(data);
-    } else {
-      alert(data.error.message);
-    }
-  }
-
   return (
     <>
-      {!userCtx.isLoggedin && <Navigate to="/auth" />}
+      {!isLoggedin && <Navigate to="/auth" />}
       <h1>Welcome to Expense Tracker!!!</h1>
-      {!userCtx.user.displayName && (
+      {user !== null && !user.displayName && (
         <p>
           Your profile is incomplete.
           <Link to="/update-profile">Complete now</Link>
         </p>
       )}
-      {!userCtx.user.emailVerified && (
+      {user !== null && !user.emailVerified && (
         <p>
           Your email is not verified.
           <button onClick={verificationHandler}>Verify Now</button>

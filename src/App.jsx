@@ -2,9 +2,10 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Auth from "./pages/Auth";
 import Home from "./pages/Home";
 import UpdateProfile from "./pages/UpdateProfile";
-import UserProvider from "./store/UserProvider";
 import Root from "./pages/Root";
 import ForgotPassword from "./pages/ForgotPassword";
+import { Provider } from "react-redux";
+import store from "./store";
 
 const router = createBrowserRouter([
   {
@@ -21,8 +22,8 @@ const router = createBrowserRouter([
 
 export default function App() {
   return (
-    <UserProvider>
+    <Provider store={store}>
       <RouterProvider router={router} />
-    </UserProvider>
+    </Provider>
   );
 }

@@ -1,14 +1,13 @@
 import { Outlet } from "react-router-dom";
 import NavBar from "../components/NavBar";
-import { useContext } from "react";
-import UserContext from "../store/user-context";
+import { useSelector } from "react-redux";
 
 export default function Root() {
-  const userCtx = useContext(UserContext);
+  const isLoggedin = useSelector((state) => state.auth.isLoggedin);
 
   return (
     <div style={{ textAlign: "center" }}>
-      {userCtx.isLoggedin && <NavBar />}
+      {isLoggedin && <NavBar />}
       <Outlet />
     </div>
   );
