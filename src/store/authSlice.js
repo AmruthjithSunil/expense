@@ -7,6 +7,7 @@ if (!localStorage.getItem("refreshToken")) {
 const authSlice = createSlice({
   name: "auth",
   initialState: {
+    isPremium: false,
     isLoggedin: localStorage.getItem("refreshToken") !== "null",
     idToken: "null",
     user: null,
@@ -21,6 +22,9 @@ const authSlice = createSlice({
     },
     updateUser(state, action) {
       state.user = action.payload;
+    },
+    toggleIsPremium(state) {
+      state.isPremium = !state.isPremium;
     },
   },
 });

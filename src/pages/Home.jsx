@@ -10,6 +10,7 @@ import {
   verificationHandler,
 } from "../utils/home";
 import { authActions, expenseActions } from "../store";
+import Premium from "../components/Premium";
 
 export default function Home() {
   const isLoggedin = useSelector((state) => state.auth.isLoggedin);
@@ -62,10 +63,7 @@ export default function Home() {
       )}
       <ExpenseForm id={id} updateId={updateId} />
       <ExpenseList updateId={updateId} />
-      {expenses.reduce(
-        (totalExpense, expense) => totalExpense + expense.amount * 1,
-        0
-      ) > 10000 && <button>Activate Premium</button>}
+      <Premium />
     </>
   );
 }

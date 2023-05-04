@@ -9,3 +9,9 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 }
+
+.darkmode {
+  background-color: black;
+  color: white;
+  min-height: 100vh;
+}
